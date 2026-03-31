@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class QuestionService {
@@ -43,5 +44,21 @@ public class QuestionService {
             e.printStackTrace();
         }
         return new ResponseEntity<>("Failed", HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<String> updateQuestion(Integer id, Question question) {
+        try {
+            if (!questionDao.existsById(id)) {
+                return new ResponseEntity<>("Question not found", HttpStatus.NOT_FOUND);
+            }
+
+            question.setId(id);
+            questionDao.save(question);
+
+            return new ResponseEntity<>("Updated", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Failed", HttpStatus.BAD_REQUEST);
+        }
     }
 }
